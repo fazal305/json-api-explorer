@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JSON API Explorer is a mini Postman-style tool for fetching and exploring JSON API responses." />
+  <title>JSON API Explorer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div>
+        <p class="eyebrow">Cyberpunk Developer Tool</p>
+        <h1 id="pageTitle">JSON API Explorer</h1>
+        <p class="hero-text">
+          Fetch GET responses, inspect JSON in a glowing tree view, search nested data,
+          and export the result without leaving your browser.
+        </p>
+      </div>
+      <div class="hero-badge" aria-hidden="true">
+        <span>GET</span>
+        <strong>JSON</strong>
+      </div>
+    </section>
+
+    <section class="card request-card" aria-label="API request">
+      <form id="requestForm" class="request-form">
+        <label for="apiUrl">API URL</label>
+        <div class="request-row">
+          <input
+            id="apiUrl"
+            name="apiUrl"
+            type="url"
+            placeholder="https://jsonplaceholder.typicode.com/users"
+            autocomplete="url"
+            spellcheck="false"
+          />
+          <button id="fetchButton" class="primary-button" type="submit">Fetch JSON</button>
+        </div>
+      </form>
+
+      <div class="toolbar" aria-label="Response actions">
+        <label class="search-label" for="searchInput">Search</label>
+        <input id="searchInput" type="search" placeholder="Search keys or values..." disabled />
+        <button id="copyButton" type="button" disabled>Copy</button>
+        <button id="downloadButton" type="button" disabled>Download</button>
+        <button id="clearButton" type="button">Clear</button>
+      </div>
+
+      <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="response-layout" aria-label="JSON response viewers">
+      <article class="card response-card">
+        <header class="card-header">
+          <div>
+            <p class="section-kicker">Raw Response</p>
+            <h2>Pretty JSON</h2>
+          </div>
+          <span id="responseSize" class="metric">0 KB</span>
+        </header>
+        <pre id="jsonPanel" class="json-panel">Enter an API URL and fetch JSON to begin.</pre>
+      </article>
+
+      <article class="card response-card">
+        <header class="card-header">
+          <div>
+            <p class="section-kicker">Interactive</p>
+            <h2>Tree Explorer</h2>
+          </div>
+          <span id="matchCount" class="metric">0 matches</span>
+        </header>
+        <div id="treePanel" class="tree-panel">
+          <p class="empty-state">No JSON loaded yet.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
