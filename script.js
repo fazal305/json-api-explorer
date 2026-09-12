@@ -32,8 +32,17 @@ async function fetchJson() {
     return;
   }
 
+  if (!navigator.onLine) {
+    showStatus("You're offline — check your connection.", "error");
+    return;
+  }
+
   setLoading(true);
   showStatus("Fetching JSON response...", "");
+
+  const slowFetchTimer = setTimeout(() => {
+    fetchButton.textContent = "Still fetching... this is taking longer than usual";
+  }, 5000);
 
   try {
     const response = await fetch(apiUrl);
@@ -61,8 +70,14 @@ async function fetchJson() {
     treePanel.innerHTML = '<p class="empty-state">Unable to build a tree view.</p>';
     matchCount.textContent = "0 matches";
     responseSize.textContent = "0 KB";
-    showStatus(error.message || "Network error. Please try another API URL.", "error");
+
+    if (!navigator.onLine) {
+      showStatus("You're offline — check your connection.", "error");
+    } else {
+      showStatus(error.message || "Network error. Please try another API URL.", "error");
+    }
   } finally {
+    clearTimeout(slowFetchTimer);
     setLoading(false);
   }
 }
@@ -99,10 +114,16 @@ function renderResponse() {
 
   const searchTerm = searchInput.value.trim();
   jsonPanel.innerHTML = highlightMatches(escapeHtml(currentJsonText), searchTerm);
-  treePanel.innerHTML = "";
-  treePanel.appendChild(createTreeNode("response", currentJson, searchTerm, true));
 
   const totalMatches = countMatches(currentJson, searchTerm);
+
+  treePanel.innerHTML = "";
+  if (searchTerm && totalMatches === 0) {
+    treePanel.innerHTML = '<p class="empty-state">No matches found.</p>';
+  } else {
+    treePanel.appendChild(createTreeNode("response", currentJson, searchTerm, true));
+  }
+
   matchCount.textContent = `${totalMatches} ${totalMatches === 1 ? "match" : "matches"}`;
   responseSize.textContent = formatBytes(new Blob([currentJsonText]).size);
 }
