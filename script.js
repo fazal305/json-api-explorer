@@ -41,7 +41,8 @@ async function fetchJson() {
   showStatus("Fetching JSON response...", "");
 
   const slowFetchTimer = setTimeout(() => {
-    fetchButton.textContent = "Still fetching... this is taking longer than usual";
+    fetchButton.textContent =
+      "Still fetching... this is taking longer than usual";
   }, 5000);
 
   try {
@@ -67,14 +68,18 @@ async function fetchJson() {
     currentJsonText = "";
     setResultControls(false);
     jsonPanel.textContent = "No JSON response available.";
-    treePanel.innerHTML = '<p class="empty-state">Unable to build a tree view.</p>';
+    treePanel.innerHTML =
+      '<p class="empty-state">Unable to build a tree view.</p>';
     matchCount.textContent = "0 matches";
     responseSize.textContent = "0 KB";
 
     if (!navigator.onLine) {
       showStatus("You're offline — check your connection.", "error");
     } else {
-      showStatus(error.message || "Network error. Please try another API URL.", "error");
+      showStatus(
+        error.message || "Network error. Please try another API URL.",
+        "error",
+      );
     }
   } finally {
     clearTimeout(slowFetchTimer);
@@ -113,7 +118,10 @@ function renderResponse() {
   }
 
   const searchTerm = searchInput.value.trim();
-  jsonPanel.innerHTML = highlightMatches(escapeHtml(currentJsonText), searchTerm);
+  jsonPanel.innerHTML = highlightMatches(
+    escapeHtml(currentJsonText),
+    searchTerm,
+  );
 
   const totalMatches = countMatches(currentJson, searchTerm);
 
@@ -121,7 +129,9 @@ function renderResponse() {
   if (searchTerm && totalMatches === 0) {
     treePanel.innerHTML = '<p class="empty-state">No matches found.</p>';
   } else {
-    treePanel.appendChild(createTreeNode("response", currentJson, searchTerm, true));
+    treePanel.appendChild(
+      createTreeNode("response", currentJson, searchTerm, true),
+    );
   }
 
   matchCount.textContent = `${totalMatches} ${totalMatches === 1 ? "match" : "matches"}`;
@@ -161,7 +171,10 @@ function createTreeNode(key, value, searchTerm, isRoot = false) {
     toggleButton.addEventListener("click", () => {
       const isCollapsed = children.classList.toggle("collapsed");
       toggleButton.textContent = isCollapsed ? "+" : "−";
-      toggleButton.setAttribute("aria-label", `${isCollapsed ? "Expand" : "Collapse"} ${key}`);
+      toggleButton.setAttribute(
+        "aria-label",
+        `${isCollapsed ? "Expand" : "Collapse"} ${key}`,
+      );
     });
 
     row.append(toggleButton, keyElement, summary);
@@ -174,7 +187,10 @@ function createTreeNode(key, value, searchTerm, isRoot = false) {
 
   const valueElement = document.createElement("span");
   valueElement.className = `tree-value ${valueType}`;
-  valueElement.innerHTML = highlightMatches(escapeHtml(formatPrimitive(value)), searchTerm);
+  valueElement.innerHTML = highlightMatches(
+    escapeHtml(formatPrimitive(value)),
+    searchTerm,
+  );
 
   row.append(spacer, keyElement, valueElement);
   node.appendChild(row);
@@ -240,7 +256,9 @@ function countMatches(value, searchTerm) {
     }
 
     if (item !== null && typeof item === "object") {
-      Object.entries(item).forEach(([childKey, childValue]) => walk(childValue, childKey));
+      Object.entries(item).forEach(([childKey, childValue]) =>
+        walk(childValue, childKey),
+      );
       return;
     }
 
@@ -258,7 +276,10 @@ async function copyJson() {
     await navigator.clipboard.writeText(currentJsonText);
     showStatus("Full JSON response copied to clipboard.", "success");
   } catch {
-    showStatus("Copy failed. Clipboard access may require HTTPS or localhost.", "error");
+    showStatus(
+      "Copy failed. Clipboard access may require HTTPS or localhost.",
+      "error",
+    );
   }
 }
 
